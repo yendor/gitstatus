@@ -1,17 +1,33 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"os"
-	"strings"
+	"path/filepath"
 
 	"gopkg.in/src-d/go-git.v4"
 )
 
 func main() {
-	r, err := git.PlainOpen(".")
-	if err != nil {
-		log.Fatal(err)
+	var r *git.Repository
+	var err error
+
+	// Starting at ., search up the directory tree looking for a git repo, stopping at /
+	p := "."
+	for {
+		p, err = filepath.Abs(p)
+		if err != nil {
+			return
+		}
+		if p == "/" {
+			return
+		}
+		r, err = git.PlainOpen(p)
+		if err != nil {
+			p = fmt.Sprintf("%s/../", p)
+		} else {
+			break
+		}
 	}
 
 	branch := branch(r)
