@@ -30,32 +30,34 @@ func main() {
 		}
 	}
 
+	// Get details of the current git repo
 	branch := branch(r)
-	log.Printf("Branch: %v\n", branch)
-	os.Setenv("GIT_BRANCH", branch)
+	ahead := 1
+	behind := 1
+	staged := 0
+	conflicts := 0
+	changed := 3
+	untracked := 2
 
-	/*
-		GIT_BRANCH=feature/NETSIP-1088-sip-usernames
-		+update_current_git_vars:7> GIT_AHEAD=1
-		+update_current_git_vars:8> GIT_BEHIND=0
-		+update_current_git_vars:9> GIT_STAGED=0
-		+update_current_git_vars:10> GIT_CONFLICTS=0
-		+update_current_git_vars:11> GIT_CHANGED=0
-		+update_current_git_vars:12> GIT_UNTRACKED=0
-	*/
-
-	clean := isClean(r)
-	log.Printf("Clean: %v\n", clean)
+	// Display the output formatted for git-prompt
+	fmt.Printf(
+		"%s %d %d %d %d %d %d",
+		branch,
+		ahead,
+		behind,
+		staged,
+		conflicts,
+		changed,
+		untracked,
+	)
 }
 
 func branch(r *git.Repository) string {
 	ref, err := r.Head()
 	if err != nil {
-		log.Fatal(err)
+		return ""
 	}
-	nameRef := ref.Name()
-	name := strings.Replace(nameRef.String(), "refs/heads/", "", 1)
-
+	name := ref.Name().Short()
 	return name
 }
 
