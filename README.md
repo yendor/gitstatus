@@ -8,6 +8,11 @@ Purpose
 
 This program will be a binary that can be used to replace the gitstatus.py script in the git-prompt plugin of oh-my-zsh.
 
+Status
+-------
+
+The gitstatus program produced does not yet correctly set all the variables necessary for it to be a replacement, nor is it faster than the python version of the script in some cases (yet). 
+
 Installation
 -------------
 
