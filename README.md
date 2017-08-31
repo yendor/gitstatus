@@ -1,8 +1,15 @@
+Inspiration
+------------
+
 After reading https://bennycwong.github.io/post/speeding-up-oh-my-zsh/ I was inspired to look at my own zsh for any python scripts that I could replace to improve the latency of my shell.
+
+Purpose
+--------
 
 This program will be a binary that can be used to replace the gitstatus.py script in the git-prompt plugin of oh-my-zsh.
 
 Installation
+-------------
 
     go get
     go install
