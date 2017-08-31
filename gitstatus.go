@@ -8,6 +8,8 @@ import (
 	"gopkg.in/src-d/go-git.v4"
 )
 
+var untracked, modified, ahead, behind, staged, conflicts int
+
 func main() {
 	var r *git.Repository
 	var err error
@@ -32,12 +34,7 @@ func main() {
 
 	// Get details of the current git repo
 	branch := branch(r)
-	ahead := 1
-	behind := 1
-	staged := 0
-	conflicts := 0
-	changed := 3
-	untracked := 2
+	get_status(r)
 
 	// Display the output formatted for git-prompt
 	fmt.Printf(
@@ -47,9 +44,36 @@ func main() {
 		behind,
 		staged,
 		conflicts,
-		changed,
+		modified,
 		untracked,
 	)
+}
+
+func get_status(r *git.Repository) {
+	wt, err := r.Worktree()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	status, err := wt.Status()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, st := range status {
+		switch st.Staging {
+		case git.Modified, git.Deleted, git.Added, git.Renamed:
+			staged++
+		}
+		switch st.Worktree {
+		case git.Untracked:
+			untracked++
+		case git.Modified:
+			modified++
+		}
+	}
+
+	log.Printf("%v\n", status)
 }
 
 func branch(r *git.Repository) string {
